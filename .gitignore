@@ -1,0 +1,38 @@
+#include <LiquidCrystal.h>
+LiquidCrystal lcd (12, 11, 5, 4, 3, 2); //DEFINO MI OBJETO CON LOS PINES
+int cont = 0;
+String incomingByte;
+int tam = 0;
+
+
+void setup() {
+  // put your setup code here, to run once:
+lcd.begin(16, 2);
+  Serial.begin(9600);// abre el puerto serie,y le asigna la velocidad de 9600 bps
+  Serial.println("Ingresar Datos");
+  lcd.clear();
+}
+
+void loop() {
+
+  if (Serial.available() > 0) {// lee el byte de entrada:
+    incomingByte = Serial.readString();//lo vuelca a pantalla
+    tam = incomingByte.length();
+    Serial.print("He recibido: "); Serial.println(incomingByte);
+  }
+  for (; cont <= tam; cont++) {// Borra la informacion de LCD
+    lcd.clear();
+    lcd.setCursor(cont, 0);
+    lcd.print(incomingByte);
+    delay(400);
+  }
+  for (; cont <= tam; cont++) {//Reinicia el contador en cero
+    lcd.setCursor(cont, 0);
+    lcd.print(incomingByte.substring(cont - 1));
+    delay(400);
+    lcd.clear();
+  }
+  cont = 0;
+  delay(400);
+
+}
